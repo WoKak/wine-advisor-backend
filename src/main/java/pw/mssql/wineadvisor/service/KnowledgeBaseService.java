@@ -8,4 +8,5 @@ public interface KnowledgeBaseService {
 
     String classifyWine(Wine wine) throws Exception;
     void moveLatestFileToMongoDB() throws IOException;
+    void trainClassifier() throws Exception;
 }

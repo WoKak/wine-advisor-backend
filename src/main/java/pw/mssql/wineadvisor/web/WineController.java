@@ -48,6 +48,7 @@ public class WineController {
 
         //TODO: Execute python scripts
         knowledgeBaseService.moveLatestFileToMongoDB();
+        knowledgeBaseService.trainClassifier();
 
         return Response.ok().build();
     }

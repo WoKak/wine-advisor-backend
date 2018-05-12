@@ -25,6 +25,7 @@ public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
         trainClassifier();
     }
 
+    @Override
     public void trainClassifier() throws Exception {
 
         Mongo mongo = new Mongo("localhost", 27017);
