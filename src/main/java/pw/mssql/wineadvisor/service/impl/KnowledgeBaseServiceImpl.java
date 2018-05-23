@@ -69,39 +69,85 @@ public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
     public String classifyWine(Wine wine) throws Exception {
 
         //TODO : Change for wine attributes
-        Attribute sepallength = new Attribute("sepallength");
-        Attribute sepalwidth = new Attribute("sepalwidth");
-        Attribute petallength = new Attribute("petallength");
-        Attribute petalwidth = new Attribute("petalwidth");
+        Attribute alcohol = new Attribute("alcohol", (FastVector) null);
+        Attribute strain = new Attribute("strain", (FastVector) null);
+        Attribute kind = new Attribute("kind", (FastVector) null);
+        Attribute dryness = new Attribute("dryness", (FastVector) null);
+        Attribute origin = new Attribute("origin", (FastVector) null);
 
-        FastVector fvClassVal = new FastVector(3);
-        fvClassVal.addElement("Iris-setosa");
-        fvClassVal.addElement("Iris-versicolor");
-        fvClassVal.addElement("Iris-virginica");
-        Attribute Class = new Attribute("theClass", fvClassVal);
+        FastVector fvClassVal = new FastVector(9);
+        fvClassVal.addElement("OWOCE MORZA");
+        fvClassVal.addElement("RYBY");
+        fvClassVal.addElement("DESERY");
+        fvClassVal.addElement("SERY");
+        fvClassVal.addElement("JAGNIĘCINA");
+        fvClassVal.addElement("MAKARONY");
+        fvClassVal.addElement("MIĘSA CZERWONE");
+        fvClassVal.addElement("MIĘSA BIAŁE");
+        fvClassVal.addElement("APERITIF");
+        Attribute theClass = new Attribute("theClass", fvClassVal);
 
-        FastVector fvAttrVal = new FastVector(5);
-        fvAttrVal.addElement(sepallength);
-        fvAttrVal.addElement(sepalwidth);
-        fvAttrVal.addElement(petallength);
-        fvAttrVal.addElement(petalwidth);
-        fvAttrVal.addElement(Class);
+        FastVector fvAttrVal = new FastVector(6);
+        fvAttrVal.addElement(alcohol);
+        fvAttrVal.addElement(strain);
+        fvAttrVal.addElement(kind);
+        fvAttrVal.addElement(dryness);
+        fvAttrVal.addElement(origin);
+        fvAttrVal.addElement(theClass);
 
         Instances dataset = new Instances("whatever", fvAttrVal, 0);
 
         double[] attrValues = new double[dataset.numAttributes()];
-        attrValues[0] = 7.0;
-        attrValues[1] = 3.3;
-        attrValues[2] = 4.8;
-        attrValues[3] = 1.4;
+        attrValues[0] = 13.0;
+        attrValues[1] = dataset.attribute("strain").addStringValue("PINOT");
+        attrValues[2] = dataset.attribute("kind").addStringValue("CZERWONE");
+        attrValues[3] = dataset.attribute("dryness").addStringValue("WYTRAWNE");
+        attrValues[4] = dataset.attribute("origin").addStringValue("NOWA ZELANDIA");
 
         Instance i1 = new DenseInstance(1.0, attrValues);
         dataset.add(i1);
         dataset.setClassIndex(dataset.numAttributes()-1);
+//        i1.setDataset(dataset);
+        String result;
 
-        //TODO: Double => class name transformation
-        System.out.println(nb.classifyInstance(dataset.instance(0)));
+        switch ((int) nb.classifyInstance(dataset.instance(0))) {
 
-        return "Hello!";
+            case 0:
+                result = "OWOCE MORZA";
+                break;
+            case 1:
+                result = "RYBY";
+                break;
+            case 2:
+                result = "DESERY";
+                break;
+            case 3:
+                result = "SERY";
+                break;
+            case 4:
+                result = "JAGNIĘCINA";
+                break;
+            case 5:
+                result = "MAKARONY";
+                break;
+            case 6:
+                result = "MIĘSA CZERWONE";
+                break;
+            case 7:
+                result = "MIĘSA BIAŁE";
+                break;
+            case 8:
+                result = "APERITIF";
+                break;
+            default:
+                result = "TYM RAZEM SIĘ NIE UDAŁO";
+                break;
+        }
+
+        result = result.toLowerCase();
+
+        System.out.println(result);
+
+        return result;
     }
 }
