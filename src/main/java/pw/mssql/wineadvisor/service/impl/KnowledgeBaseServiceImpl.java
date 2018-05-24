@@ -18,6 +18,31 @@ import java.io.IOException;
 
 public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
 
+    private static String[] strains = {
+            "GRACIANO", "PROSECCO", "BLAUBURGER", "LOUREIRO", "GLERA",
+            "RONDINELLA", "SANGIOVESE", "MOSCATEL", "MALVASIA", "MALBEC",
+            "CASTELAO", "VERMENTINO", "CABERNET", "MACABEO", "PINOT",
+            "MONTEPULCIANO", "GEWURZTRAMINER", "MERLOT", "RIESLING", "NEGROAMARO",
+            "MARZEMINO", "MOSCATO", "AGLIANICO", "BOMBINO", "PRIMITIVO",
+            "MUSCAT", "TEMPRANILLO", "RABOSO", "FURMINT", "CHARDONNAY",
+            "FETEASCA", "GRENACHE", "SAPERAVI", "PEDRO", "NERO"
+    };
+
+    private static String[] kinds = {"BIALE","WINO-MUSUJACE","ROZOWE","CZERWONE"};
+
+    private static String[] drynesses = {"WYTRAWNE","SLODKIE","POLSLODKIE","POLWYTRAWNE"};
+
+    private static String[] origins = {
+            "CHILE","SLOWACJA","GRUZJA","SZWECJA","MOLDAWIA",
+            "NOWA-ZELANDIA","FRANCJA","NIEMCY","WLOCHY","WEGRY",
+            "PORTUGALIA","HISZPANIA"
+    };
+
+    private static String[] classes = {
+            "OWOCE-MORZA","RYBY","DESERY","SERY","JAGNIECINA",
+            "MAKARONY","MIESA-CZERWONE","MIESA-BIALE","APERITIF"
+    };
+
     private NaiveBayes nb;
 
     public KnowledgeBaseServiceImpl() throws Exception {
@@ -68,49 +93,58 @@ public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
     @Override
     public String classifyWine(Wine wine) throws Exception {
 
-        //TODO : Change for wine attributes
-        Attribute alcohol = new Attribute("alcohol", (FastVector) null);
-        Attribute strain = new Attribute("strain", (FastVector) null);
-        Attribute kind = new Attribute("kind", (FastVector) null);
-        Attribute dryness = new Attribute("dryness", (FastVector) null);
-        Attribute origin = new Attribute("origin", (FastVector) null);
+        Attribute alcohol = new Attribute("alcohol");
 
-        FastVector fvClassVal = new FastVector(9);
-        fvClassVal.addElement("OWOCE MORZA");
-        fvClassVal.addElement("RYBY");
-        fvClassVal.addElement("DESERY");
-        fvClassVal.addElement("SERY");
-        fvClassVal.addElement("JAGNIĘCINA");
-        fvClassVal.addElement("MAKARONY");
-        fvClassVal.addElement("MIĘSA CZERWONE");
-        fvClassVal.addElement("MIĘSA BIAŁE");
-        fvClassVal.addElement("APERITIF");
-        Attribute theClass = new Attribute("theClass", fvClassVal);
+        FastVector strainsVals = new FastVector();
+        for (int i = 0; i < strains.length; i++) {
 
-        FastVector fvAttrVal = new FastVector(6);
+            strainsVals.addElement(strains[i]);
+        }
+        Attribute strain = new Attribute("strain", strainsVals);
+
+        FastVector kindsVals = new FastVector();
+        for (int i = 0; i < kinds.length; i++) {
+
+            kindsVals.addElement(kinds[i]);
+        }
+        Attribute kind = new Attribute("kind", kindsVals);
+
+        FastVector drynessesVals = new FastVector();
+        for (int i = 0; i < drynesses.length; i++) {
+
+            drynessesVals.addElement(drynesses[i]);
+        }
+        Attribute dryness = new Attribute("dryness", drynessesVals);
+
+        FastVector originsVals = new FastVector();
+        for (int i = 0; i < origins.length; i++) {
+
+            originsVals.addElement(origins[i]);
+        }
+        Attribute origin = new Attribute("origin", originsVals);
+
+        FastVector fvAttrVal = new FastVector();
         fvAttrVal.addElement(alcohol);
         fvAttrVal.addElement(strain);
         fvAttrVal.addElement(kind);
         fvAttrVal.addElement(dryness);
         fvAttrVal.addElement(origin);
-        fvAttrVal.addElement(theClass);
-
         Instances dataset = new Instances("whatever", fvAttrVal, 0);
 
         double[] attrValues = new double[dataset.numAttributes()];
         attrValues[0] = 13.0;
-        attrValues[1] = dataset.attribute("strain").addStringValue("PINOT");
-        attrValues[2] = dataset.attribute("kind").addStringValue("CZERWONE");
-        attrValues[3] = dataset.attribute("dryness").addStringValue("WYTRAWNE");
-        attrValues[4] = dataset.attribute("origin").addStringValue("NOWA ZELANDIA");
+        attrValues[1] = dataset.attribute("strain").indexOfValue("PINOT");
+        attrValues[2] = dataset.attribute("kind").indexOfValue("CZERWONE");
+        attrValues[3] = dataset.attribute("dryness").indexOfValue("WYTRAWNE");
+        attrValues[4] = dataset.attribute("origin").indexOfValue("NOWA-ZELANDIA");
 
         Instance i1 = new DenseInstance(1.0, attrValues);
         dataset.add(i1);
         dataset.setClassIndex(dataset.numAttributes()-1);
-//        i1.setDataset(dataset);
+
         String result;
 
-        switch ((int) nb.classifyInstance(dataset.instance(0))) {
+        switch ((int) nb.classifyInstance(dataset.firstInstance())) {
 
             case 0:
                 result = "OWOCE MORZA";
