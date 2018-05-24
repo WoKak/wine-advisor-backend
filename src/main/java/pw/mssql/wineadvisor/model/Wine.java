@@ -2,72 +2,32 @@ package pw.mssql.wineadvisor.model;
 
 import lombok.*;
 
+@Data
+@ToString(callSuper = true)
+@EqualsAndHashCode(exclude = "alcoholPercentage")
 public class Wine {
 
+    @Getter
+    @Setter
     private int alcoholPercentage;
+
+    @Getter
+    @Setter
     private String grapeVariety;
+
+    @Getter
+    @Setter
     private String wineType;
+
+    @Getter
+    @Setter
     private String wineDryness;
+
+    @Getter
+    @Setter
     private String wineOrigin;
+
+    @Getter
+    @Setter
     private String purpose;
-
-    public Wine(int alcoholPercentage, String grapeVariety, String wineType, String wineDryness, String wineOrigin, String purpose) {
-        this.alcoholPercentage = alcoholPercentage;
-        this.grapeVariety = grapeVariety;
-        this.wineType = wineType;
-        this.wineDryness = wineDryness;
-        this.wineOrigin = wineOrigin;
-        this.purpose = purpose;
-    }
-
-    public Wine() {
-    }
-
-    public int getAlcoholPercentage() {
-        return alcoholPercentage;
-    }
-
-    public void setAlcoholPercentage(int alcoholPercentage) {
-        this.alcoholPercentage = alcoholPercentage;
-    }
-
-    public String getGrapeVariety() {
-        return grapeVariety;
-    }
-
-    public void setGrapeVariety(String grapeVariety) {
-        this.grapeVariety = grapeVariety;
-    }
-
-    public String getWineType() {
-        return wineType;
-    }
-
-    public void setWineType(String wineType) {
-        this.wineType = wineType;
-    }
-
-    public String getWineDryness() {
-        return wineDryness;
-    }
-
-    public void setWineDryness(String wineDryness) {
-        this.wineDryness = wineDryness;
-    }
-
-    public String getWineOrigin() {
-        return wineOrigin;
-    }
-
-    public void setWineOrigin(String wineOrigin) {
-        this.wineOrigin = wineOrigin;
-    }
-
-    public String getPurpose() {
-        return purpose;
-    }
-
-    public void setPurpose(String purpose) {
-        this.purpose = purpose;
-    }
 }

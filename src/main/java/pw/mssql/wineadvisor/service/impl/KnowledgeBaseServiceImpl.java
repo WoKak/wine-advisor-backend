@@ -93,6 +93,8 @@ public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
     @Override
     public String classifyWine(Wine wine) throws Exception {
 
+        //Initializing attributes
+
         Attribute alcohol = new Attribute("alcohol");
 
         FastVector strainsVals = new FastVector();
@@ -123,6 +125,8 @@ public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
         }
         Attribute origin = new Attribute("origin", originsVals);
 
+        //Creating dataset
+
         FastVector fvAttrVal = new FastVector();
         fvAttrVal.addElement(alcohol);
         fvAttrVal.addElement(strain);
@@ -131,57 +135,18 @@ public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
         fvAttrVal.addElement(origin);
         Instances dataset = new Instances("whatever", fvAttrVal, 0);
 
+        //Creating instance for classification
         double[] attrValues = new double[dataset.numAttributes()];
-        attrValues[0] = 13.0;
-        attrValues[1] = dataset.attribute("strain").indexOfValue("PINOT");
-        attrValues[2] = dataset.attribute("kind").indexOfValue("CZERWONE");
-        attrValues[3] = dataset.attribute("dryness").indexOfValue("WYTRAWNE");
-        attrValues[4] = dataset.attribute("origin").indexOfValue("NOWA-ZELANDIA");
-
+        attrValues[0] = (double) wine.getAlcoholPercentage();
+        attrValues[1] = dataset.attribute("strain").indexOfValue(wine.getGrapeVariety());
+        attrValues[2] = dataset.attribute("kind").indexOfValue(wine.getWineType());
+        attrValues[3] = dataset.attribute("dryness").indexOfValue(wine.getWineDryness());
+        attrValues[4] = dataset.attribute("origin").indexOfValue(wine.getWineOrigin());
         Instance i1 = new DenseInstance(1.0, attrValues);
         dataset.add(i1);
+
         dataset.setClassIndex(dataset.numAttributes()-1);
 
-        String result;
-
-        switch ((int) nb.classifyInstance(dataset.firstInstance())) {
-
-            case 0:
-                result = "OWOCE MORZA";
-                break;
-            case 1:
-                result = "RYBY";
-                break;
-            case 2:
-                result = "DESERY";
-                break;
-            case 3:
-                result = "SERY";
-                break;
-            case 4:
-                result = "JAGNIĘCINA";
-                break;
-            case 5:
-                result = "MAKARONY";
-                break;
-            case 6:
-                result = "MIĘSA CZERWONE";
-                break;
-            case 7:
-                result = "MIĘSA BIAŁE";
-                break;
-            case 8:
-                result = "APERITIF";
-                break;
-            default:
-                result = "TYM RAZEM SIĘ NIE UDAŁO";
-                break;
-        }
-
-        result = result.toLowerCase();
-
-        System.out.println(result);
-
-        return result;
+        return classes[(int) nb.classifyInstance(dataset.firstInstance())];
     }
 }

@@ -12,7 +12,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/wine")
@@ -31,7 +30,6 @@ public class WineController {
     @Produces(MediaType.APPLICATION_JSON)
     public Wine ask(@RequestBody Wine question) {
 
-        System.out.println(question.toString());
         Wine answer = new Wine();
         try {
             answer.setPurpose(knowledgeBaseService.classifyWine(question));
