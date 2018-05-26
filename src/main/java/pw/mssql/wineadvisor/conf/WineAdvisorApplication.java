@@ -7,11 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import pw.mssql.wineadvisor.service.KnowledgeBaseService;
 import pw.mssql.wineadvisor.service.impl.KnowledgeBaseServiceImpl;
-
-import javax.sql.DataSource;
 
 @SpringBootApplication(scanBasePackages = "pw.mssql.wineadvisor")
 @PropertySource(value = {"classpath:db.properties"})
@@ -43,16 +40,5 @@ public class WineAdvisorApplication {
     @Bean
     public KnowledgeBaseService classificationService() throws Exception {
         return new KnowledgeBaseServiceImpl();
-    }
-
-    @Bean
-    public DataSource dataSource() {
-
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getRequiredProperty("jdbc.drivers"));
-        dataSource.setUrl(env.getRequiredProperty("jdbc.url"));
-        dataSource.setUsername(env.getRequiredProperty("jdbc.username"));
-        dataSource.setPassword(env.getRequiredProperty("jdbc.password"));
-        return dataSource;
     }
 }

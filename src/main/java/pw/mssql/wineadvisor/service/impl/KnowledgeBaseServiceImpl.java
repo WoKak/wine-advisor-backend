@@ -6,6 +6,10 @@ import com.mongodb.Mongo;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import pw.mssql.wineadvisor.model.Wine;
 import pw.mssql.wineadvisor.service.KnowledgeBaseService;
 import weka.classifiers.Evaluation;
@@ -13,8 +17,9 @@ import weka.classifiers.bayes.NaiveBayes;
 import weka.core.*;
 import weka.core.converters.ConverterUtils.DataSource;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
 
@@ -28,22 +33,22 @@ public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
             "FETEASCA", "GRENACHE", "SAPERAVI", "PEDRO", "NERO"
     };
 
-    private static String[] kinds = {"BIALE","WINO-MUSUJACE","ROZOWE","CZERWONE"};
+    private static String[] kinds = {"BIALE", "WINO-MUSUJACE", "ROZOWE", "CZERWONE"};
 
-    private static String[] drynesses = {"WYTRAWNE","SLODKIE","POLSLODKIE","POLWYTRAWNE"};
+    private static String[] drynesses = {"WYTRAWNE", "SLODKIE", "POLSLODKIE", "POLWYTRAWNE"};
 
     private static String[] origins = {
-            "CHILE","SLOWACJA","GRUZJA","SZWECJA","MOLDAWIA",
-            "NOWA-ZELANDIA","FRANCJA","NIEMCY","WLOCHY","WEGRY",
-            "PORTUGALIA","HISZPANIA"
+            "CHILE", "SLOWACJA", "GRUZJA", "SZWECJA", "MOLDAWIA",
+            "NOWA-ZELANDIA", "FRANCJA", "NIEMCY", "WLOCHY", "WEGRY",
+            "PORTUGALIA", "HISZPANIA"
     };
 
     private static String[] classes = {
-            "OWOCE-MORZA","RYBY","DESERY","SERY","JAGNIECINA",
-            "MAKARONY","MIESA-CZERWONE","MIESA-BIALE","APERITIF"
+            "OWOCE-MORZA", "RYBY", "DESERY", "SERY", "JAGNIECINA",
+            "MAKARONY", "MIESA-CZERWONE", "MIESA-BIALE", "APERITIF"
     };
 
-    private NaiveBayes nb;
+    private NaiveBayes classifier;
 
     public KnowledgeBaseServiceImpl() throws Exception {
 
@@ -63,11 +68,13 @@ public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
 
         DataSource source = new DataSource("latest.arff");
         Instances dataset = source.getDataSet();
-        dataset.setClassIndex(dataset.numAttributes()-1);
-        this.nb = new NaiveBayes();
-        nb.buildClassifier(dataset);
+        dataset.setClassIndex(dataset.numAttributes() - 1);
+        this.classifier = new NaiveBayes();
+        classifier.buildClassifier(dataset);
         Evaluation eval = new Evaluation(dataset);
-        eval.evaluateModel(nb, dataset);
+        eval.evaluateModel(classifier, dataset);
+
+        prepareReport(eval.toSummaryString(), eval.toMatrixString());
     }
 
     @Override
@@ -145,8 +152,89 @@ public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
         Instance i1 = new DenseInstance(1.0, attrValues);
         dataset.add(i1);
 
-        dataset.setClassIndex(dataset.numAttributes()-1);
+        dataset.setClassIndex(dataset.numAttributes() - 1);
 
-        return classes[(int) nb.classifyInstance(dataset.firstInstance())];
+        return classes[(int) classifier.classifyInstance(dataset.firstInstance())];
+    }
+
+    private void prepareReport(String generalData, String classificationData) throws IOException {
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet spreadsheet = workbook.createSheet(" Raport o winach ");
+
+        XSSFRow row;
+        XSSFCell cellWithGeneralData;
+        XSSFCell cellWithWinesclassificationData;
+
+        //Parsing general data
+        StringReader stringReader = new StringReader(generalData);
+        BufferedReader bufferedReader = new BufferedReader(stringReader);
+        bufferedReader.readLine();
+        String line = bufferedReader.readLine();
+
+        int rowId = 0;
+        while (Optional.ofNullable(line).isPresent()) {
+
+            row = spreadsheet.createRow(rowId++);
+            String[] splitted = line.split("\\s{2,}");
+            int cellId = 0;
+
+            for (String s : splitted) {
+
+                cellWithGeneralData = row.createCell(cellId++);
+                cellWithGeneralData.setCellValue(s);
+            }
+
+            line = bufferedReader.readLine();
+        }
+
+        //first line of classification data
+        stringReader = new StringReader(classificationData);
+        bufferedReader = new BufferedReader(stringReader);
+        bufferedReader.readLine();
+        bufferedReader.readLine();
+        line = bufferedReader.readLine();
+
+        rowId++;
+        row = spreadsheet.createRow(rowId++);
+        String[] preSplitted = line.split("\\s{3}");
+        String[] splitted = preSplitted[0].split(" ");
+        splitted = Stream.of(splitted).filter(s -> !s.equals("")).toArray(String[]::new);
+        int cellId = 0;
+
+        for (String s : splitted) {
+
+            cellWithWinesclassificationData = row.createCell(cellId++);
+            cellWithWinesclassificationData.setCellValue(s);
+        }
+
+        cellWithWinesclassificationData = row.createCell(cellId++);
+        cellWithWinesclassificationData.setCellValue(preSplitted[1]);
+        line = bufferedReader.readLine();
+
+        //other lines of classification data
+        while(Optional.ofNullable(line).isPresent()) {
+
+            row = spreadsheet.createRow(rowId++);
+            preSplitted = line.split("\\|");
+            splitted = preSplitted[0].split(" ");
+            splitted = Stream.of(splitted).filter(s -> !s.equals("")).toArray(String[]::new);
+            cellId = 0;
+
+            for (String s : splitted) {
+
+                cellWithWinesclassificationData = row.createCell(cellId++);
+                cellWithWinesclassificationData.setCellValue(s);
+            }
+
+            cellWithWinesclassificationData = row.createCell(cellId++);
+            cellWithWinesclassificationData.setCellValue(preSplitted[1]);
+
+            line = bufferedReader.readLine();
+        }
+
+        FileOutputStream out = new FileOutputStream(new File("raport.xlsx"));
+        workbook.write(out);
+        out.close();
     }
 }
