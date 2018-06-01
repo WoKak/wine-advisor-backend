@@ -44,7 +44,7 @@ public class WineController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response refresh() throws Exception {
 
-        //TODO: Execute python scripts
+        Process process = Runtime.getRuntime().exec("python mysql_to_arff.py");
         knowledgeBaseService.moveLatestFileToMongoDB();
         knowledgeBaseService.trainClassifier();
 
