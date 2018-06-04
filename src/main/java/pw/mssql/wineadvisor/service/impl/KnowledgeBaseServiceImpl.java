@@ -23,14 +23,8 @@ import java.util.stream.Stream;
 
 public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
 
-    private static String[] strains = {
-            "SHIRAZ","RIESLING","MALBEC","ESPADEIRO","BOMBINO",
-            "GEWURZTRAMINER","RONDINELLA","PRIMITIVO","PALOMINO",
-            "MOSCATO","FETEASCA","RABOSO","TINTA","MONTEPULCIANO",
-            "AGLIANICO","MACABEO","CHARDONNAY","CHARDONNAY","PEDRO",
-            "SAPERAVI","CABERNET","MACABEO","TEMPRANILLO","MARZEMINO",
-            "PALOMINO","MUSCAT","MALVASIA"
-    };
+    private static String[] strains = {"SHIRAZ","PINOT","RIESLING","CASTELAO","MALBEC","SAUVIGNON","ESPADEIRO","GRACIANO","BOMBINO","ZINFANDEL","GEWURZTRAMINER","SYRAH","RONDINELLA","NEGROAMARO","PRIMITIVO","MERLOT","GLERA","MOSCATO","SANGIOVESE","FETEASCA","RABOSO","MOSCATEL","TINTA","AIREN","MONTEPULCIANO","NERO","AGLIANICO","PROSECCO","MACABEO","BLAUBURGER","CHARDONNAY","TREBBIANO","LOUREIRO","PEDRO","FURMINT","SAPERAVI","ARINTO","CABERNET","COLOMBARD","VERMENTINO","TEMPRANILLO","GARNACHA","MARZEMINO","GRENACHE","PALOMINO","CARINENA","MUSCAT","MALVASIA"};
+
 
     private static String[] kinds = {"BIALE", "MUSUJACE", "ROZOWE", "CZERWONE", "WZMACNIANE"};
 
@@ -39,13 +33,13 @@ public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
     private static String[] origins = {
             "CHILE", "SLOWACJA", "GRUZJA", "SZWECJA", "MOLDAWIA",
             "NOWA-ZELANDIA", "FRANCJA", "NIEMCY", "WLOCHY", "WEGRY",
-            "PORTUGALIA", "HISZPANIA", "ARGENTYNA", "SLOWACJA"
+            "PORTUGALIA", "HISZPANIA", "ARGENTYNA"
     };
 
     private static String[] classes = {
             "OWOCE-MORZA", "RYBY", "DESERY", "SERY", "JAGNIECINA",
             "MAKARONY", "MIESA-CZERWONE", "MIESA-BIALE", "APERITIF", "TEX-MEX",
-            "WOLOWINA", "DZICZYZNA", "DROB", "PRZYSTAWKI", "WIEPRZOWINA",
+            "WOLOWINA", "DROB", "PRZYSTAWKI",
             "SAMO-W-SOBIE", "SUSHI", "BARANINA"
     };
 
@@ -59,13 +53,13 @@ public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
     @Override
     public void trainClassifier() throws Exception {
 
-        Mongo mongo = new Mongo("localhost", 27017);
-        DB db = mongo.getDB("wineadv");
-
-        GridFS gfsArff = new GridFS(db, "arff");
-
-        GridFSDBFile arff = gfsArff.findOne("latest.arff");
-        arff.writeTo("latest.arff");
+//        Mongo mongo = new Mongo("localhost", 27017);
+//        DB db = mongo.getDB("wineadv");
+//
+//        GridFS gfsArff = new GridFS(db, "arff");
+//
+//        GridFSDBFile arff = gfsArff.findOne("latest.arff");
+//        arff.writeTo("latest.arff");
 
         DataSource source = new DataSource("latest.arff");
         Instances dataset = source.getDataSet();

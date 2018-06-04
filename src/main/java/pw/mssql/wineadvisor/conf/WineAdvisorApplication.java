@@ -11,11 +11,7 @@ import pw.mssql.wineadvisor.service.KnowledgeBaseService;
 import pw.mssql.wineadvisor.service.impl.KnowledgeBaseServiceImpl;
 
 @SpringBootApplication(scanBasePackages = "pw.mssql.wineadvisor")
-@PropertySource(value = {"classpath:db.properties"})
 public class WineAdvisorApplication {
-
-    @Autowired
-    private Environment env;
 
     public static void main(String[] args) {
         SpringApplication.run(WineAdvisorApplication.class, args);
