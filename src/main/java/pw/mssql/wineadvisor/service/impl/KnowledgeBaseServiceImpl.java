@@ -53,13 +53,13 @@ public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
     @Override
     public void trainClassifier() throws Exception {
 
-//        Mongo mongo = new Mongo("localhost", 27017);
-//        DB db = mongo.getDB("wineadv");
-//
-//        GridFS gfsArff = new GridFS(db, "arff");
-//
-//        GridFSDBFile arff = gfsArff.findOne("latest.arff");
-//        arff.writeTo("latest.arff");
+        Mongo mongo = new Mongo("localhost", 27017);
+        DB db = mongo.getDB("wineadv");
+
+        GridFS gfsArff = new GridFS(db, "arff");
+
+        GridFSDBFile arff = gfsArff.findOne("latest.arff");
+        arff.writeTo("latest.arff");
 
         DataSource source = new DataSource("latest.arff");
         Instances dataset = source.getDataSet();
