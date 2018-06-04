@@ -55,7 +55,7 @@ arfffile.write("\n@ATTRIBUTE strain {" + unidecode.unidecode(szczepystring) + "}
 arfffile.write("\n@ATTRIBUTE kind {" + unidecode.unidecode(rodzajstring) + "}")
 arfffile.write("\n@ATTRIBUTE dryness {" + unidecode.unidecode(wytrawnoscstring) + "}")
 arfffile.write("\n@ATTRIBUTE origin {" + unidecode.unidecode(krajstring) + "}")
-arfffile.write("\n@ATTRIBUTE classs {" + unidecode.unidecode(przeznaczeniestring) + "}")
+arfffile.write("\n@ATTRIBUTE class {" + unidecode.unidecode(przeznaczeniestring) + "}")
 
 arfffile.write("\n\n@DATA\n")
 for wino in data:
