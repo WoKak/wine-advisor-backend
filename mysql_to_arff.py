@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import mysql.connector
+import unidecode
 
 cnx = mysql.connector.connect(user='root', password='', host='127.0.0.1', database='wina')
 cursor = cnx.cursor()
@@ -14,6 +15,8 @@ przeznaczenieset = set()
 cursor.execute(query)
 data = []
 for (id, alkohol, szczepy, rodzaj, wytrawnosc, kraj, przeznaczenie) in cursor:
+    kraj = kraj.replace(" ", "-")
+    przeznaczenie = przeznaczenie.replace(" ", "-")
     data.append((str(alkohol) + "," + szczepy + "," + rodzaj + "," + wytrawnosc + "," + kraj + "," + przeznaczenie + "\n"))
     szczepyset.add(szczepy)
     rodzajset.add(rodzaj)
@@ -48,14 +51,14 @@ while przeznaczenieset:
 
 arfffile.write("@RELATION wine\n")
 arfffile.write("\n@ATTRIBUTE alcohol REAL")
-arfffile.write("\n@ATTRIBUTE strain {" + szczepystring + "}")
-arfffile.write("\n@ATTRIBUTE kind {" + rodzajstring + "}")
-arfffile.write("\n@ATTRIBUTE dryness {" + wytrawnoscstring + "}")
-arfffile.write("\n@ATTRIBUTE origin {" + krajstring + "}")
-arfffile.write("\n@ATTRIBUTE classs {" + przeznaczeniestring + "}")
+arfffile.write("\n@ATTRIBUTE strain {" + unidecode.unidecode(szczepystring) + "}")
+arfffile.write("\n@ATTRIBUTE kind {" + unidecode.unidecode(rodzajstring) + "}")
+arfffile.write("\n@ATTRIBUTE dryness {" + unidecode.unidecode(wytrawnoscstring) + "}")
+arfffile.write("\n@ATTRIBUTE origin {" + unidecode.unidecode(krajstring) + "}")
+arfffile.write("\n@ATTRIBUTE classs {" + unidecode.unidecode(przeznaczeniestring) + "}")
 
 arfffile.write("\n\n@DATA\n")
 for wino in data:
-    arfffile.write(wino)
+    arfffile.write(unidecode.unidecode(wino))
 
 arfffile.close()
