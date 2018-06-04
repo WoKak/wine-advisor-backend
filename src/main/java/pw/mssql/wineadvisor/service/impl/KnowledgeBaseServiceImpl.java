@@ -24,28 +24,29 @@ import java.util.stream.Stream;
 public class KnowledgeBaseServiceImpl implements KnowledgeBaseService {
 
     private static String[] strains = {
-            "GRACIANO", "PROSECCO", "BLAUBURGER", "LOUREIRO", "GLERA",
-            "RONDINELLA", "SANGIOVESE", "MOSCATEL", "MALVASIA", "MALBEC",
-            "CASTELAO", "VERMENTINO", "CABERNET", "MACABEO", "PINOT",
-            "MONTEPULCIANO", "GEWURZTRAMINER", "MERLOT", "RIESLING", "NEGROAMARO",
-            "MARZEMINO", "MOSCATO", "AGLIANICO", "BOMBINO", "PRIMITIVO",
-            "MUSCAT", "TEMPRANILLO", "RABOSO", "FURMINT", "CHARDONNAY",
-            "FETEASCA", "GRENACHE", "SAPERAVI", "PEDRO", "NERO"
+            "SHIRAZ","RIESLING","MALBEC","ESPADEIRO","BOMBINO",
+            "GEWURZTRAMINER","RONDINELLA","PRIMITIVO","PALOMINO",
+            "MOSCATO","FETEASCA","RABOSO","TINTA","MONTEPULCIANO",
+            "AGLIANICO","MACABEO","CHARDONNAY","CHARDONNAY","PEDRO",
+            "SAPERAVI","CABERNET","MACABEO","TEMPRANILLO","MARZEMINO",
+            "PALOMINO","MUSCAT","MALVASIA"
     };
 
-    private static String[] kinds = {"BIALE", "WINO-MUSUJACE", "ROZOWE", "CZERWONE"};
+    private static String[] kinds = {"BIALE", "MUSUJACE", "ROZOWE", "CZERWONE", "WZMACNIANE"};
 
-    private static String[] drynesses = {"WYTRAWNE", "SLODKIE", "POLSLODKIE", "POLWYTRAWNE"};
+    private static String[] drynesses = {"WYTRAWNE", "SLODKIE", "POLSLODKIE", "POLWYTRAWNE", "LEKKOWYTRAWNE"};
 
     private static String[] origins = {
             "CHILE", "SLOWACJA", "GRUZJA", "SZWECJA", "MOLDAWIA",
             "NOWA-ZELANDIA", "FRANCJA", "NIEMCY", "WLOCHY", "WEGRY",
-            "PORTUGALIA", "HISZPANIA"
+            "PORTUGALIA", "HISZPANIA", "ARGENTYNA", "SLOWACJA"
     };
 
     private static String[] classes = {
             "OWOCE-MORZA", "RYBY", "DESERY", "SERY", "JAGNIECINA",
-            "MAKARONY", "MIESA-CZERWONE", "MIESA-BIALE", "APERITIF"
+            "MAKARONY", "MIESA-CZERWONE", "MIESA-BIALE", "APERITIF", "TEX-MEX",
+            "WOLOWINA", "DZICZYZNA", "DROB", "PRZYSTAWKI", "WIEPRZOWINA",
+            "SAMO-W-SOBIE", "SUSHI", "BARANINA"
     };
 
     private NaiveBayes classifier;
